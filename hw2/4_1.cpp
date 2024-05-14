@@ -29,10 +29,6 @@ class AVLTree {
                 left(nullptr), right(nullptr),
                 key(key), count(1), height(1) {
         }
-        ~Node() {
-            //delete left;
-            //delete right;
-        }
     };
 
 public:
@@ -229,6 +225,15 @@ private:
         return temp;
     }
 
+    void del_tree(Node* node) {
+        if (!node) {
+            return;
+        }
+        del_tree(node->left);
+        del_tree(node->right);
+        delete node;
+    }
+
     Node* root;
     size_t items_count;
     Comparator comp;
@@ -301,7 +306,7 @@ void test() {
 }
 
 int main() {
-   test();
+    // test();
     run(std::cin, std::cout);
     return 0;
 }
