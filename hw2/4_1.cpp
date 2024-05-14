@@ -306,7 +306,7 @@ void test() {
 }
 
 int main() {
-    test();
+    // test();
     run(std::cin, std::cout);
     return 0;
 }
