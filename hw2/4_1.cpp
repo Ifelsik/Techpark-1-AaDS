@@ -25,7 +25,7 @@ class AVLTree {
         size_t count;
         uint8_t height;
 
-        Node(const Key& key):
+        explicit Node(const Key& key):
                 left(nullptr), right(nullptr),
                 key(key), count(1), height(1) {
         }
@@ -39,7 +39,7 @@ public:
     }
 
     ~AVLTree() {
-        //delete root;
+        del_tree(root);
     }
 
     size_t size() const { return items_count; }
@@ -306,7 +306,7 @@ void test() {
 }
 
 int main() {
-    // test();
+    test();
     run(std::cin, std::cout);
     return 0;
 }
