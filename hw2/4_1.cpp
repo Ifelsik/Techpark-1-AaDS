@@ -64,8 +64,11 @@ public:
         while (k_stat != node_right_count) {
             if (k_stat > node_right_count) {
                 node = node->left;
+                k_stat -= (node_right_count + 1);
             } else {
-                k_stat -= (node_right_count - 1); //
+                if (k_stat == node_right_count) {
+                    return node;
+                }
                 node = node->right;
             }
             node_right_count = count(node->right);
@@ -149,7 +152,9 @@ private:
         }
         if (min_node != node) {
             min_node->right = node;
-            previous_node->left = nullptr;
+            if (node != previous_node) {  // bug here
+                previous_node->left = nullptr;
+            }  // bug
         }
         return min_node;
     }
@@ -276,31 +281,163 @@ void test() {
         assert(out.str() == "0\n0\n2\n1\n");
     }
     {
-        {
-            std::stringstream in;
-            std::stringstream out;
+        std::stringstream in;
+        std::stringstream out;
 
-            in << "15\n";
-            in << "1 41\n";
-            in << "1 18467\n";
-            in << "2 0\n";
-            in << "1 26500\n";
-            in << "1 19169\n";
-            in << "2 1\n";
-            in << "1 11478\n";
-            in << "1 29358\n";
-            in << "2 2\n";
-            in << "1 24464\n";
-            in << "1 5705\n";
-            in << "2 0\n";
-            in << "1 23281\n";
-            in << "1 16827\n";
-            in << "2 1\n";
+        in << "15\n";
+        in << "1 41\n";
+        in << "1 18467\n";
+        in << "2 0\n";
+        in << "1 26500\n";
+        in << "1 19169\n";
+        in << "2 1\n";
+        in << "1 11478\n";
+        in << "1 29358\n";
+        in << "2 2\n";
+        in << "1 24464\n";
+        in << "1 5705\n";
+        in << "2 0\n";
+        in << "1 23281\n";
+        in << "1 16827\n";
+        in << "2 1\n";
 
-            run(in, out);
+        run(in, out);
 
-            assert(out.str() == "0\n0\n0\n1\n1\n0\n2\n3\n2\n3\n");
+        assert(out.str() == "0\n0\n0\n1\n1\n0\n2\n3\n2\n3\n");
+    }
+    {
+        std::stringstream in;
+        std::stringstream out;
+
+        in << "12\n";
+        in << "1 5705\n";
+        in << "1 2995\n";
+        in << "1 16827\n";
+        in << "1 491\n";
+        in << "1 5436\n";
+        in << "1 12382\n";
+        in << "1 19718\n";
+        in << "1 292\n";
+        in << "1 4827\n";
+        in << "1 5447\n";
+        in << "1 18716\n";
+        in << "1 21726\n";
+
+        in << "2 5\n";
+        in << "2 9\n";
+        in << "2 3\n";
+        in << "2 10\n";
+        in << "2 7\n";
+        in << "2 4\n";
+        in << "2 1\n";
+        in << "2 11\n";
+        in << "2 8\n";
+        in << "2 6\n";
+        in << "2 2\n";
+        in << "2 0\n";
+
+        int n = 0, key = 0, pos = 0;
+        in >> n;
+        n *= 2;
+        AVLTree<int> avl_tree;
+        int op;
+        while (n-- > 0) {
+            in >> op;
+            if (op == 1) {
+                in >> key;
+                avl_tree.insert(key);
+            } else if (op == 2) {
+                in >> pos;
+                auto node_to_delete = avl_tree.find_position(pos);
+                out << node_to_delete->key << ' ';
+            }
         }
+        assert(out.str() == "5705 2995 16827 491 5436 12382 19718 292 4827 5447 18716 21726 ");
+    }
+    {
+        std::stringstream in;
+        std::stringstream out;
+
+        in << "75\n";
+        in << "1 41\n";
+        in << "1 18467\n";
+        in << "2 0\n";
+        in << "1 26500\n";
+        in << "1 19169\n";
+        in << "2 1\n";
+        in << "1 11478\n";
+        in << "1 29358\n";
+        in << "2 2\n";
+        in << "1 24464\n";
+        in << "1 5705\n";
+        in << "2 0\n";
+        in << "1 23281\n";
+        in << "1 16827\n";
+        in << "2 1\n";
+        in << "1 491\n";
+        in << "1 2995\n";
+        in << "2 0\n";
+        in << "1 4827\n";
+        in << "1 5436\n";
+        in << "2 7\n";
+        in << "1 14604\n";
+        in << "1 3902\n";
+        in << "2 0\n";
+        in << "1 292\n";
+        in << "1 12382\n";
+        in << "2 1\n";
+        in << "1 18716\n";
+        in << "1 19718\n";
+        in << "2 7\n";
+        in << "1 5447\n";
+        in << "1 21726\n";
+        in << "2 11\n";
+        in << "1 11538\n";
+        in << "1 1869\n";
+        in << "2 9\n";
+        in << "1 25667\n";
+        in << "1 26299\n";
+        in << "2 11\n";
+        in << "1 9894\n";
+        in << "1 28703\n";
+        in << "2 6\n";
+        in << "1 31322\n";
+        in << "1 30333\n";
+        in << "2 9\n";
+        in << "1 4664\n";
+        in << "1 15141\n";
+        in << "2 10\n";
+        in << "1 28253\n";
+        in << "1 6868\n";
+        in << "2 5\n";
+        in << "1 27644\n";
+        in << "1 32662\n";
+        in << "2 1\n";
+        in << "1 20037\n";
+        in << "1 12859\n";
+        in << "2 3\n";
+        in << "1 9741\n";
+        in << "1 27529\n";
+        in << "2 1\n";
+        in << "1 12316\n";
+        in << "1 3035\n";
+        in << "2 14\n";
+        in << "1 1842\n";
+        in << "1 288\n";
+        in << "2 22\n";
+        in << "1 9040\n";
+        in << "1 8942\n";
+        in << "2 16\n";
+        in << "1 22648\n";
+        in << "1 27446\n";
+        in << "2 5\n";
+        in << "1 15890\n";
+        in << "1 6729\n";
+        in << "2 8\n";
+
+        run(in, out);
+
+        assert(out.str() == "0\n0\n0\n1\n1\n0\n2\n3\n2\n3\n4\n4\n3\n3\n2\n6\n8\n2\n0\n0\n5\n0\n5\n11\n0\n0\n8\n0\n0\n1\n13\n8\n3\n11\n4\n0\n7\n11\n12\n4\n12\n19\n20\n22\n14\n15\n5\n4\n10\n18\n");
     }
     std::cout << "OK!" << std::endl;
 }
